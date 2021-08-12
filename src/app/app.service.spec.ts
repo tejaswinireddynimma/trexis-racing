@@ -21,6 +21,18 @@ describe('AppService', () => {
     expect(service).toBeTruthy();
   }));
 
+  it('isLoggedIn() should let us know if user is present or not', inject([AppService], (service: AppService) => {
+    expect(service.isLoggedIn()).toEqual(false);
+    service.username = 'test';
+    expect(service.isLoggedIn()).toEqual(true);
+  }))
+
+  it('setUsername() should set the usename', inject([AppService], (service: AppService) => {
+    expect(service.username).toBeUndefined();
+    service.setUsername('test');
+    expect(service.username).toEqual('test');
+  }));
+
   it('should call bakend to get memebers', () => {
     const expectedUrl = 'http://localhost:8000/api/members';
     const getMembers = appsService.getMembers();
