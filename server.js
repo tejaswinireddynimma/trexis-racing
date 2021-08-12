@@ -20,7 +20,8 @@ app.use(nosniff());
 app.set('etag', false);
 app.use(
   helmet({
-    noCache: true
+    noCache: true,
+    contentSecurityPolicy: false
   })
 );
 app.use(
@@ -43,68 +44,59 @@ app.get('/api/members', (req, res) => {
   });
 });
 
-
-app.get('/api/teams', (req, res) => {
-  request('http://localhost:3000/teams', (err, response, body) => {
-    if (response.statusCode <= 500) {
-      res.send(body);
-    }
-  });
+app.get('/api/member/:id', (req, res) => {
+    request('http://localhost:3000/members/'+ req.params.id, (err, response, body) => {
+        if (response.statusCode <= 500) {
+            res.send(body);
+        }
+    });
 });
 
-app.get('/api/members/:id', (req, res) => {
-  let options = {
-      url: 'http://localhost:3000/members/' + req.params.id
-  };
-  request.get(options, (err, response, body) => {
-    if (response.statusCode <= 500) {
-      res.send(body);
-    }
-  });
- 
+app.get('/api/teams', (req, res) => {
+    request('http://localhost:3000/teams', (err, response, body) => {
+        if (response.statusCode <= 500) {
+            res.send(body);
+        }
+    });
 });
 
 // Submit Form!
 app.post('/api/addMember', (req, res) => {
-    let options = {
-      url: 'http://localhost:3000/members',
-      form: req.body
-  };
-
-  request.post(options, (err, response, body) => {
-    if (response.statusCode <= 500) {
-      res.send(body);
-    }
-  });
+   request.post({
+       headers: 'Content-Type: application/json',
+       url: 'http://localhost:3000/members',
+       body: req.body,
+       json: true
+   },(err, response, body) => {
+       if (response.statusCode <= 500) {
+           res.send(body);
+       }
+   });
 });
 
-app.put('/api/members/:id', (req, res) => {
- 
-  let options = {
-      url: 'http://localhost:3000/members/' + req.params.id,
-      form: req.body
-  };
-
-  request.put(options, (err, response, body) => {
-    if (response.statusCode <= 500) {
-      res.send(body);
-    }
-  });
- 
+app.delete('/api/deleteMember/:id', (req, res) => {
+    request.delete({
+        headers: 'Content-Type: application/json',
+        url: 'http://localhost:3000/members/' + req.params.id,
+        json: true
+    },(err, response, body) => {
+        if (response.statusCode <= 500) {
+            res.send(body);
+        }
+    });
 });
 
-app.delete('/api/members/:id', (req, res) => {
- 
-  let options = {
-      url: 'http://localhost:3000/members/' + req.params.id,
-  };
-
-  request.delete(options, (err, response, body) => {
-    if (response.statusCode <= 500) {
-      res.send(body);
-    }
-  });
- 
+app.put('/api/updateMember/:id', (req, res) => {
+    request.put({
+        headers: 'Content-Type: application/json',
+        url: 'http://localhost:3000/members/' + req.params.id,
+        body: req.body,
+        json: true
+    },(err, response, body) => {
+        if (response.statusCode <= 500) {
+            res.send(body);
+        }
+    });
 });
 
 app.get('*', (req, res) => {

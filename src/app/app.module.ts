@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
+import { AppService } from './app.service';
+import { AuthGuard } from './guards/auth.guard';
 import { BannerComponent } from './banner/banner.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { LoginComponent } from './login/login.component';
 import { MemberDetailsComponent } from './member-details/member-details.component';
 import { MembersComponent } from './members/members.component';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { AppService } from './app.service';
-
 
 // We may be missing a route...
 const ROUTES = [
@@ -21,7 +21,13 @@ const ROUTES = [
   },
   {
     path: 'members',
-    component: MembersComponent
+    component: MembersComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'details',
+    component: MemberDetailsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'login',
@@ -45,7 +51,7 @@ const ROUTES = [
     FormsModule,
     HttpClientModule
   ],
-  providers: [AppService, HttpClient],
+  providers: [AppService, HttpClient, AuthGuard ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

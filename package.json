@@ -7,10 +7,10 @@
     "watch": "ng build --watch --configuration development",
     "start": "npm-run-all -p build server db",
     "start-dev": "npm-run-all -p client server db",
-    "test": "ng test",
-    "db": "json-server db.json",
+    "test": "ng test --watch=false --code-coverage",
+    "db": "json-server --watch db.json",
     "client": "ng serve",
-    "server": "nodemon server.js"
+    "server": "node server.js"
   },
   "private": true,
   "dependencies": {
